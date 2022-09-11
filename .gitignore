@@ -1,0 +1,6 @@
+venv
+ProjectNews/ProjectNews/__pycache__
+ProjectNews/blog/__pycache__
+ProjectNews/blog/migrations
+ProjectNews/fpages/__pycache__
+ProjectNews/db.sqlite3
