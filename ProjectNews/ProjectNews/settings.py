@@ -30,7 +30,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'fpages',
-    'blog',
+    'blog.apps.BlogConfig',
+    'django_filters',
+    'sign',
+    'protect',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 ]
 
 SITE_ID = 1
@@ -88,6 +95,7 @@ DATABASES = {
     }
 }
 
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
@@ -116,12 +124,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
 USE_TZ = True
 
+TIME_ZONE = 'Europe/Moscow'
+
+USE_I18N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -132,3 +139,53 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_EMAIL_REQUIRED = True  # указать емейл при регистрации
+ACCOUNT_UNIQUE_EMAIL = True  # емейл должен быть уникальным
+ACCOUNT_USERNAME_REQUIRED = True  # просим указать юзернейм при регистрации
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # авторизация по емейлу
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # обязательное подтверждение регистрации по емейлу
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # срок действия ссылки подтверждения регистрации
+ACCOUNT_EMAIL_SUBJECT_PREFIX = 'InTech Production'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/home/'
+
+ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+
+ADMINS = [
+    ('Artem', 'vrtem.ya@yandex.ru'),
+]
+
+MANAGERS = [
+    ('Artem', 'vrtem.ya@yandex.ru'),
+]
+
+SERVER_EMAIL = 'test.django.proj@yandex.ru'  # Адрес электронной почты, с которого приходят сообщения об ошибках, например, отправленные на ADMINS и MANAGERS.
+
+#  Подключаем сервер отправки писем
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'test.django.proj'
+EMAIL_HOST_PASSWORD = 'test.django.proj123'
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = 'test.django.proj@yandex.ru'  # Адрес электронной почты по умолчанию, который будет использоваться для различной автоматической
+# корреспонденции от менеджера(ов) сайта. 
+# Сюда не входят сообщения об ошибках, отправленные на адреса ADMINS и MANAGERS; для этого смотрите SERVER_EMAIL.
+
+# формат даты, которую будет воспринимать наш задачник
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+DAILY_POST_LIMIT = 3

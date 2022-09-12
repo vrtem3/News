@@ -4,3 +4,5 @@ ProjectNews/blog/__pycache__
 ProjectNews/blog/migrations
 ProjectNews/fpages/__pycache__
 ProjectNews/db.sqlite3
+ProjectNews/sign/migrations
+ProjectNews/protect/migrations

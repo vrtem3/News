@@ -33,7 +33,7 @@ class Category(models.Model):
     subscribers = models.ManyToManyField(User, through='CategorySubscribers', blank=True, verbose_name='Подписчики')
 
     def __str__(self):
-        return str(self.category_name)
+        return str(self.categoryName)
 
     class Meta:
         verbose_name = 'Категория'
@@ -65,7 +65,7 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return self.post_title
+        return self.title
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])

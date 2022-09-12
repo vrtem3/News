@@ -1,0 +1,90 @@
+from blog.models import *
+
+1. Создать двух пользователей (с помощью метода User.objects.create_user('username')):
+
+    u1 = User.objects.create_user('Artem')
+    u2 = User.objects.create_user('Oleg')
+
+2. Создать два объекта модели Author, связанные с пользователями:
+
+    Author.objects.create(authorUser=u1)
+    Author.objects.create(authorUser=u2)
+
+3. Добавить 4 категории в модель Category:
+
+    Category.objects.create(categoryName='CRM')
+    Category.objects.create(categoryName='Tasks')
+    Category.objects.create(categoryName='BizProc')
+    Category.objects.create(categoryName='Bitrix24')
+
+4. Добавить 2 статьи и 1 новость.
+
+    author = Author.objects.get(id=1)
+    author2 = Author.objects.get(id=1)
+    Post.objects.create(authorConnect=author, categoryType='AR', title='sometitleB24', text='sometext1')
+    Post.objects.create(authorConnect=author, categoryType='AR', title='sometitleBitrix', text='sometext2')
+    Post.objects.create(authorConnect=author, categoryType='NW', title='sometitleNW', text='sometextNW')
+    Post.objects.create(authorConnect=author2, categoryType='AR', title='some_titleB24', text='sometext1')
+    Post.objects.create(authorConnect=author2, categoryType='AR', title='some_titleBitrix', text='sometext2')
+    Post.objects.create(authorConnect=author2, categoryType='NW', title='some_titleNW', text='sometextNW')
+
+5. Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
+
+    Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+    Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2))
+    Post.objects.get(id=2).postCategory.add(Category.objects.get(id=3))
+    Post.objects.get(id=3).postCategory.add(Category.objects.get(id=4))
+    Post.objects.get(id=4).postCategory.add(Category.objects.get(id=2))
+    Post.objects.get(id=5).postCategory.add(Category.objects.get(id=3))
+    Post.objects.get(id=6).postCategory.add(Category.objects.get(id=4))
+
+6. Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
+
+    Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='anytext')
+    Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=2).authorUser, text='anytext1')
+    Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=2).authorUser, text='anytext2')
+    Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=1).authorUser, text='anytext433')
+    Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=1).authorUser, text='anytext43354646445')
+
+7. Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
+
+    Comment.objects.get(id=1).like()
+    Comment.objects.get(id=2).like()
+    Post.objects.get(id=1).dislike()
+    Post.objects.get(id=2).dislike()
+    Post.objects.get(id=3).like()
+    Post.objects.get(id=4).like()
+    Post.objects.get(id=5).like()
+    Post.objects.get(id=6).like()
+
+8. Обновить рейтинги пользователей.
+
+    Author.objects.get(id=1).update_rating()
+    Author.objects.get(id=2).update_rating()
+
+9. Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+
+    a = Author.objects.order_by('-rating_author')[:1]
+    for i in a:
+        i.author_user.username
+        i.rating_author
+
+10. Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+
+    b = Post.objects.order_by('-rating')[:1]
+    for i in b:
+        i.date_create
+        i.author_connect.author_user.username
+        i.rating
+        i.title
+        i.preview()
+
+
+11. Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+
+    comments = Comment.objects.filter(comment_post_id=Post.objects.get(id=Post.objects.order_by('-rating')[:1]))
+    for i in comments:
+        i.comment_user
+        i.date_create
+        i.rating
+        i.text
